@@ -39,78 +39,29 @@ public class ClientHandler implements Runnable
                 switch (request.get("Operation").toString())
                 {
                     case "login":
-//                {
-//                    JSONObject response = new JSONObject();
-//
-//                    try
-//                    {
-////                        AuthenticationService.login();
-//
-//                        if (server.bankDB.isAccountActive(Integer.parseInt(request.get("CustomerID").toString())))
-//                        {
-//                            response.put("Status", "error");
-//
-//                            response.put("Message", "User already logged in");
-//                        }
-//                        else
-//                        {
-//                            System.out.println("Val: "+server.bankDB.isAccountActive(Integer.parseInt(request.get("CustomerID").toString())));
-//                            if (server.bankDB.checkCredential(Integer.parseInt(request.get("CustomerID").toString()),
-//                                    request.get("Password").toString()))
-//                            {
-//                                // login successfully
-//                                var customer = server.bankDB.getCustomer(Integer.parseInt(request.get("CustomerID").toString()));
-//
-//                                if (customer != null)
-//                                {
-//                                    server.bankDB.addActiveAccount(customer.getCustomerID());
-//
-//                                    response.put("CustomerID", customer.getCustomerID());
-//
-//                                    response.put("Message", "Login successful");
-//
-//                                    response.put("AccountID", customer.getAccountID());
-//
-//                                    response.put("Status","ok");
-//                                }
-//                                else {
-//                                    // error
-//                                    // show appropriate message
-//
-//                                    response.clear();
-//
-//                                    response.put("Message", "Error in login");
-//
-//                                    response.put("Status", "error");
-//                                }
-//
-//                            }
-//                            else
-//                            {
-//                                // credential are wrong
-//                                response.clear();
-//
-//                                response.put("Message", "Invalid credentials");
-//
-//                                response.put("Status", "error");
-//                            }
-//                        }
-//                    }
-//                    catch (Exception exception)
-//                    {
-//                        exception.printStackTrace();
-//
-//                        response.clear();
-//
-//                        response.put("Message", "Error in login");
-//
-//                        response.put("Status", "error");
-//                    }
-//                    finally
-//                    {
+                {
+                    JSONObject response = new JSONObject();
+
+                    try
+                    {
+                        response = AuthenticationService.login(Integer.parseInt(request.get("CustomerID").toString()),
+                                request.get("Password").toString());
+
+                    }
+                    catch (Exception exception)
+                    {
+                        exception.printStackTrace();
+                    }
+                    finally
+                    {
 //                        socket.send(response.toString());
-//                    }
-//                }
+                        printWriter.println(response);
+
+                        printWriter.flush();
+
+                        System.out.println("Login: "+response);
+                    }
+                }
                         break;
                     case "createCustomer":
                     {

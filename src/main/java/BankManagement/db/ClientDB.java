@@ -12,4 +12,15 @@ public class ClientDB
     {
         return clientMap.computeIfAbsent(client.getCustomerID(), k -> client) != null;
     }
+
+    public boolean checkCredential(int clientID, String password)
+    {
+        return clientMap.containsKey(clientID)
+                && clientMap.get(clientID).getPassword().equals(password);
+    }
+
+    public Client getClient(int clientID)
+    {
+        return clientMap.get(clientID);
+    }
 }

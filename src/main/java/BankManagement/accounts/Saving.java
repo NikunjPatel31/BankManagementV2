@@ -2,7 +2,7 @@ package BankManagement.accounts;
 
 public class Saving implements Account
 {
-    private static int ACCOUNT_NUMBER = 10001;
+    private static int ACCOUNT_NUMBER = 10000;
     private float interestRate;
     private long  minReqBalance = 2000;
     private long balance;

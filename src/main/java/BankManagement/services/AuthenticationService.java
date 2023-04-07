@@ -12,18 +12,39 @@ import java.io.PrintWriter;
 
 public class AuthenticationService
 {
-    public static JSONObject login(int customerID, String password)
+    public static JSONObject login(int clientID, String password)
     {
+        ClientDB db = new ClientDB();
+
         JSONObject response = null;
 
         try
         {
-            System.out.println("Login method");
+            response = new JSONObject();
+
+            if (db.checkCredential(clientID, password))
+            {
+                Client client = db.getClient(clientID);
+
+                response.put("Status", "ok");
+
+                response.put("Message", "Login successful");
+
+                response.put("CustomerID", clientID);
+
+                response.put("AccountID", client.getAccountID());
+            }
+            else
+            {
+                response.put("Status", "error");
+
+                response.put("Message", "Invalid credential");
+            }
 
         }
         catch (Exception exception)
         {
-
+            exception.printStackTrace();
         }
         finally
         {
@@ -104,6 +125,8 @@ public class AuthenticationService
 
             if (accountDB.addAccount(saving))
             {
+                new ClientDB().getClient(customerID).setAccountID(saving.getAccountNumber());
+
                 response.put("Status", "ok");
 
                 response.put("Message", "Account created successfully");

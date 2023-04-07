@@ -38,41 +38,44 @@ public class BootstrapClient
 
                     switch (choice)
                     {
-//                        case 1 ->
-//                        // login...
-//                        {
-//                            JSONObject request = login();
-//
-//                            // send request to server for login...
-//                            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
-//
-//                            printWriter.println(request);
-//
-//                            // response for login from server...
-//                            JSONObject response = new JSONObject(reader.readLine());
-//
-//                            if (response.get("Status").toString().equals("ok"))
-//                            {
-//                                System.out.println(Constant.UNDERSCORE_SEQ);
-//
-//                                System.out.println("Login successful");
-//
-//                                System.out.println(Constant.UNDERSCORE_SEQ);
-//
-//                                accountID = Integer.parseInt(response.get("AccountID").toString());
-//
-//                                customerID = Integer.parseInt(response.get("CustomerID").toString());
-//
-//                                options(socket, accountID, customerID);
-//                            } else
-//                            {
-//                                System.out.println(Constant.ASTERISK_SEQ);
-//
-//                                System.out.println(response.get("Message"));
-//
-//                                System.out.println(Constant.ASTERISK_SEQ);
-//                            }
-//                        }
+                        case 1 ->
+                        // login...
+                        {
+                            JSONObject request = login();
+
+                            // send request to server for login...
+
+                            printWriter.println(request);
+
+                            printWriter.flush();
+
+                            // response for login from server...
+                            JSONObject response = new JSONObject(serverReader.readLine());
+
+                            if (response.get("Status").toString().equals("ok"))
+                            {
+                                System.out.println(Constant.UNDERSCORE_SEQ);
+
+                                System.out.println("Login successful");
+
+                                System.out.println(Constant.UNDERSCORE_SEQ);
+
+                                accountID = Integer.parseInt(response.get("AccountID").toString());
+
+                                customerID = Integer.parseInt(response.get("CustomerID").toString());
+
+                                System.out.println("Response: "+response);
+
+                                options(socket, accountID, customerID, printWriter, serverReader);
+                            } else
+                            {
+                                System.out.println(Constant.ASTERISK_SEQ);
+
+                                System.out.println(response.get("Message"));
+
+                                System.out.println(Constant.ASTERISK_SEQ);
+                            }
+                        }
                         case 2 ->
                         {
                             // create account...
@@ -385,9 +388,6 @@ public class BootstrapClient
 
                     request.put("CustomerID", customerID);
 
-//                    socket.send(request.toString());
-
-
                     printWriter.println(request);
 
                     printWriter.flush();
@@ -477,9 +477,6 @@ public class BootstrapClient
 
                             request.put("AccountID", accountID);
 
-//                            socket.send(request.toString());
-
-
                             printWriter.println(request);
 
                             printWriter.flush();
@@ -505,10 +502,6 @@ public class BootstrapClient
                         try
                         {
                             var request = getBalance(accountID);
-
-                            //send request to server...
-//                            socket.send(request.toString());
-
 
                             printWriter.println(request);
 
