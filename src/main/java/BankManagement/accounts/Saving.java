@@ -55,12 +55,19 @@ public class Saving implements Account
     @Override
     public long withdraw(long amount)
     {
-        return 0;
+        if ((balance - amount) >= minReqBalance)
+        {
+            balance -= amount;
+
+            return balance;
+        }
+
+        return -1;
     }
 
     @Override
     public long deposit(long amount)
     {
-        return 0;
+        return balance += amount;
     }
 }

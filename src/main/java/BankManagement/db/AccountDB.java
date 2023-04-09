@@ -18,4 +18,9 @@ public class AccountDB
     {
         return accountMap.get(accountID).getBalance();
     }
+
+    public Account getAccount(int accountID)
+    {
+        return accountMap.get(accountID);
+    }
 }

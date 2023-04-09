@@ -1,5 +1,6 @@
 package BankManagement;
 
+import BankManagement.services.ClientTransactionService;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -69,11 +70,7 @@ public class BootstrapClient
                                 options(socket, accountID, customerID, printWriter, serverReader);
                             } else
                             {
-                                System.out.println(Constant.ASTERISK_SEQ);
-
-                                System.out.println(response.get("Message"));
-
-                                System.out.println(Constant.ASTERISK_SEQ);
+                                System.out.println(Constant.ASTERISK_SEQ+"\n"+response.get("Message")+"\n"+Constant.ASTERISK_SEQ);
                             }
                         }
                         case 2 ->
@@ -85,8 +82,6 @@ public class BootstrapClient
 
                                 if (request != null)
                                 {
-//                                    socket.send(cus.toString());
-
                                     printWriter.println(request);
 
                                     printWriter.flush();
@@ -357,45 +352,18 @@ public class BootstrapClient
         return null;
     }
 
-    public static void options(Socket socket, long accountID, int customerID, PrintWriter printWriter, BufferedReader serverReader)
+    public static void options(Socket socket, int accountID, int customerID, PrintWriter printWriter, BufferedReader serverReader)
     {
         try
         {
             while (true)
             {
-                System.out.println("Select Operation: ");
-
-                System.out.println("1. Withdraw");
-
-                System.out.println("2. Deposit");
-
-                System.out.println("3. Check Balance");
-
-                System.out.println("4. Transfer");
-
-                System.out.println("5. Exit");
-
-                System.out.print("Choice: ");
+                System.out.print("Select Operation: \n1. Withdraw\n2. Deposit\n3. Check Balance\n4. Transfer\n5. Exit\nChoice: ");
 
                 int operation = Integer.parseInt(reader.readLine());
 
                 if (operation == 5)
                 {
-
-                    var request = new JSONObject();
-
-                    request.put("Operation", "logout");
-
-                    request.put("CustomerID", customerID);
-
-                    printWriter.println(request);
-
-                    printWriter.flush();
-
-                    var response = new JSONObject(serverReader.readLine());
-
-                    System.out.println(response.get("Message"));
-
                     break;
                 }
 
@@ -404,191 +372,28 @@ public class BootstrapClient
                     case 1 ->
                     // withdraw
                     {
-                        try
-                        {
-                            var request = new JSONObject();
-
-                            System.out.print("Enter amount: ");
-
-                            request.put("Operation", "withdraw");
-
-                            var value = "";
-                            while ((value = reader.readLine()).isBlank()
-                                    || !Pattern.matches("\\d+",value))
-                            {
-                                System.out.print("Please enter proper amount: ");
-                            }
-
-                            request.put("Amount", value);
-
-                            request.put("AccountID", accountID);
-
-                            // send request...
-//                            socket.send(request.toString());
-
-                            printWriter.println(request);
-
-                            printWriter.flush();
-
-                            // response from server
-                            var response = new JSONObject(serverReader.readLine());
-
-                            if (response.get("Status").toString().equals("ok"))
-                            {
-                                System.out.println("-------------------------------------------------");
-
-                                System.out.println(response.get("Message"));
-
-                                System.out.println("\nUpdated balance: " + response.get("Updated Balance"));
-
-                                System.out.println("-------------------------------------------------");
-                            } else
-                            {
-                                System.out.println("-------------------------------------------------");
-
-                                System.out.println(response.get("Message"));
-
-                                System.out.println("-------------------------------------------------");
-                            }
-                        } catch (Exception exception)
-                        {
-                            exception.printStackTrace();
-                        }
+                        ClientTransactionService.withdraw(serverReader, reader ,printWriter, accountID);
                     }
                     case 2 ->
                     // deposit
                     {
-                        try
-                        {
-                            var request = new JSONObject();
-
-                            request.put("Operation", "deposit");
-
-                            System.out.print("Enter amount: ");
-
-                            var value = "";
-                            while ((value = reader.readLine()).isBlank()
-                                    || !Pattern.matches("\\d+",value))
-                            {
-                                System.out.print("Please enter proper amount: ");
-                            }
-
-                            request.put("Amount", value);
-
-                            request.put("AccountID", accountID);
-
-                            printWriter.println(request);
-
-                            printWriter.flush();
-
-                            var response = new JSONObject(serverReader.readLine());
-
-                            System.out.println(Constant.UNDERSCORE_SEQ);
-
-                            System.out.println(response.get("Message"));
-
-                            System.out.println("\nUpdated Balance: " + response.get("Updated Balance"));
-
-                            System.out.println(Constant.UNDERSCORE_SEQ);
-
-                        } catch (Exception exception)
-                        {
-                            exception.printStackTrace();
-                        }
+                        ClientTransactionService.deposit( serverReader, reader, printWriter, accountID);
                     }
                     case 3 ->
                     // check balance
                     {
-                        try
-                        {
-                            var request = getBalance(accountID);
-
-                            printWriter.println(request);
-
-                            printWriter.flush();
-
-                            // response from server...
-                            var response = new JSONObject(serverReader.readLine());
-
-                            System.out.println(Constant.UNDERSCORE_SEQ);
-
-                            System.out.println("Current Balance: " + response.get("Balance"));
-
-                            System.out.println(Constant.UNDERSCORE_SEQ);
-
-                        } catch (Exception exception)
-                        {
-                            exception.printStackTrace();
-                        }
+                        ClientTransactionService.checkBalance(serverReader, reader, printWriter, accountID);
                     }
                     case 4 ->
                     // transfer
                     {
-                        try
-                        {
-                            var request = new JSONObject();
-
-                            System.out.print("Enter recipient Account Number: ");
-
-                            var value = "";
-                            while ((value = reader.readLine()).isBlank()
-                                    || !Pattern.matches("\\d{5}",value))
-                            {
-                                System.out.print("Please enter proper account number: ");
-                            }
-
-                            request.put("Operation", "Transfer");
-
-                            request.put("Recipient AccountID", value);
-
-                            request.put("AccountID", accountID);
-
-                            System.out.print("Enter amount to transfer: ");
-
-                            while ((value = reader.readLine()).isBlank()
-                                    || !Pattern.matches("\\d+",value))
-                            {
-                                System.out.print("Please enter proper amount: ");
-                            }
-
-                            request.put("Amount", value);
-
-                            // send transfer request to server
-//                            socket.send(request.toString());
-
-
-                            printWriter.println(request);
-
-                            printWriter.flush();
-
-                            var response = new JSONObject(serverReader.readLine());
-
-                            if (response.get("Status").toString().equals("ok"))
-                            {
-                                System.out.println(Constant.UNDERSCORE_SEQ);
-
-                                System.out.println(response.get("Message"));
-
-                                System.out.println("\nUpdated Balance: " + response.get("Updated Balance"));
-
-                                System.out.println(Constant.UNDERSCORE_SEQ);
-                            } else
-                            {
-                                System.out.println(Constant.UNDERSCORE_SEQ);
-
-                                System.out.println(response.get("Message"));
-
-                                System.out.println(Constant.UNDERSCORE_SEQ);
-                            }
-                        } catch (Exception exception)
-                        {
-                            exception.printStackTrace();
-                        }
+                        ClientTransactionService.transfer(serverReader, reader, printWriter, accountID);
                     }
                     default -> System.out.println("Invalid choice ");
                 }
             }
-        } catch (Exception exception)
+        }
+        catch (Exception exception)
         {
             exception.printStackTrace();
         }
