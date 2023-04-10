@@ -25,9 +25,13 @@ public class Saving implements Account
     }
 
     @Override
-    public void setBalance(long amount)
+    public long setBalance(long amount)
     {
-        this.balance = amount;
+        if (amount < minReqBalance)
+        {
+            return -1;
+        }
+        return this.balance = amount;
     }
 
     @Override

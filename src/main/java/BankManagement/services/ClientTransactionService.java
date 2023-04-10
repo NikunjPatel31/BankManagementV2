@@ -35,24 +35,24 @@ public class ClientTransactionService
             printWriter.flush();
 
             // response from server
-            var response = new JSONObject(serverReader.readLine());
+            var serverResponse = serverReader.readLine();
+
+            if (serverResponse == null)
+            {
+                // this block will execute when server will go down...
+                System.out.println("Server is not available");
+
+                System.exit(0);
+            }
+
+            var response = new JSONObject(serverResponse);
 
             if (response.get("Status").toString().equals("ok"))
             {
-                System.out.println("-------------------------------------------------");
-
-                System.out.println(response.get("Message"));
-
-                System.out.println("\nUpdated balance: " + response.get("Updated Balance"));
-
-                System.out.println("-------------------------------------------------");
+                System.out.println(Constant.UNDERSCORE_SEQ+"\n"+response.get("Message")+"\nUpdated Balance: "+response.get("Updated Balance")+"\n"+Constant.UNDERSCORE_SEQ);
             } else
             {
-                System.out.println("-------------------------------------------------");
-
-                System.out.println(response.get("Message"));
-
-                System.out.println("-------------------------------------------------");
+                System.out.println(Constant.UNDERSCORE_SEQ+"\n"+response.get("Message")+"\n"+Constant.UNDERSCORE_SEQ);
             }
         } catch (Exception exception)
         {
@@ -85,15 +85,20 @@ public class ClientTransactionService
 
             printWriter.flush();
 
-            var response = new JSONObject(serverReader.readLine());
+            // response from server
+            var serverResponse = serverReader.readLine();
 
-            System.out.println(Constant.UNDERSCORE_SEQ);
+            if (serverResponse == null)
+            {
+                // this block will execute when server will go down...
+                System.out.println("Server is not available");
 
-            System.out.println(response.get("Message"));
+                System.exit(0);
+            }
 
-            System.out.println("\nUpdated Balance: " + response.get("Updated Balance"));
+            var response = new JSONObject(serverResponse);
 
-            System.out.println(Constant.UNDERSCORE_SEQ);
+            System.out.println(Constant.UNDERSCORE_SEQ+"\n"+response.get("Message")+"\nUpdated Balance: "+response.get("Updated Balance")+Constant.UNDERSCORE_SEQ);
 
         } catch (Exception exception)
         {
@@ -116,13 +121,19 @@ public class ClientTransactionService
             printWriter.flush();
 
             // response from server...
-            var response = new JSONObject(serverReader.readLine());
+            var serverResponse = serverReader.readLine();
 
-            System.out.println(Constant.UNDERSCORE_SEQ);
+            if (serverResponse == null)
+            {
+                // this block will execute when server will go down...
+                System.out.println("Server is not available");
 
-            System.out.println("Current Balance: " + response.get("Balance"));
+                System.exit(0);
+            }
 
-            System.out.println(Constant.UNDERSCORE_SEQ);
+            var response = new JSONObject(serverResponse);
+
+            System.out.println(Constant.UNDERSCORE_SEQ+"\nCurrent Balance: "+response.get("Balance")+"\n"+Constant.UNDERSCORE_SEQ);
 
         } catch (Exception exception)
         {
@@ -161,32 +172,30 @@ public class ClientTransactionService
 
             request.put("Amount", value);
 
-            // send transfer request to server
-//                            socket.send(request.toString());
-
             printWriter.println(request);
 
             printWriter.flush();
 
-            var response = new JSONObject(serverReader.readLine());
+            // response from server
+            var serverResponse = serverReader.readLine();
+
+            if (serverResponse == null)
+            {
+                // this block will execute when server will go down...
+                System.out.println("Server is not available");
+
+                System.exit(0);
+            }
+
+            var response = new JSONObject(serverResponse);
 
             if (response.get("Status").toString().equals("ok"))
             {
-                System.out.println(Constant.UNDERSCORE_SEQ);
-
-                System.out.println(response.get("Message"));
-
-                System.out.println("\nUpdated Balance: " + response.get("Updated Balance"));
-
-                System.out.println(Constant.UNDERSCORE_SEQ);
+                System.out.println(Constant.UNDERSCORE_SEQ+"\n"+response.get("Message")+"\nUpdated Balance: "+response.get("Updated Balance")+"\n"+Constant.UNDERSCORE_SEQ);
             }
             else
             {
-                System.out.println(Constant.UNDERSCORE_SEQ);
-
-                System.out.println(response.get("Message"));
-
-                System.out.println(Constant.UNDERSCORE_SEQ);
+                System.out.println(Constant.UNDERSCORE_SEQ+"\n"+response.get("Message")+"\n"+Constant.UNDERSCORE_SEQ);
             }
         }
         catch (Exception exception)

@@ -109,19 +109,27 @@ public class AuthenticationService
     {
         AccountDB accountDB = new AccountDB();
 
-        JSONObject response = null;
+        JSONObject response = new JSONObject();;
 
         try
         {
             Saving saving = new Saving();
 
-            saving.setBalance(balance);
+            var bal = saving.setBalance(balance);
+
+            if (bal == -1)
+            {
+                // account must be created with required minimum balance
+                response.put("Status", "error");
+
+                response.put("Message", "Insufficient amount to open account");
+
+                return response;
+            }
 
             saving.setCustomerID(customerID);
 
             saving.setAccountID();
-
-            response = new JSONObject();
 
             if (accountDB.addAccount(saving))
             {

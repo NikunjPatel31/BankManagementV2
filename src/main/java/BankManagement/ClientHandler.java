@@ -81,18 +81,11 @@ public class ClientHandler implements Runnable
 
                         try
                         {
-                            var saving = new Saving();
-
-                            saving.setBalance(Long.parseLong(request.get("balance").toString()));
-
-                            saving.setCustomerID(Integer.parseInt(request.get("CustomerID").toString()));
-
-                            saving.setAccountID();
-
                             // adding new account to db
 
                             response = AuthenticationService.createAccount(Integer.parseInt(request.get("CustomerID").toString()), Long.parseLong(request.get("balance").toString()));
 
+                            System.out.println("Create account: "+response);
                         } catch (Exception exception)
                         {
                             exception.printStackTrace();
